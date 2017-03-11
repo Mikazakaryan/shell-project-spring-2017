@@ -6,7 +6,7 @@ using std::cout;
 using std::cin;
 using std::endl;
 using std::stringstream;
-
+using std::find;
 
 struct Path {
   vector<string> paths;
@@ -113,12 +113,34 @@ void fork_exec(vector<string> vector_arg){
 
 void get_comand(void) {
   string input_line;
-  Path all_pathes;
-  start_up(all_pathes);
-  all_pathes.show_path();
+  static bool firs_call = true;
+  static Path all_pathes;
+  if(firs_call){
+    start_up(all_pathes);
+    firs_call = false;
+  }
   vector<string> parsed_commands;
   cout << "[oh my gosh shell] $ ";
   getline (cin, input_line) ;
   parsed_commands = parsing(input_line);
+  for (size_t i = 0; i < parsed_commands.size(); i++) {
+    if(parsed_commands[i] == "delete_path"){
+      if(parsed_commands.size() >= i + 1){
+        all_pathes.delete_path(parsed_commands[i + 1]);
+      }else{
+        cout<<"Missing argument\n";
+      }
+    }
+    else if(parsed_commands[i] == "add_path"){
+        if(parsed_commands.size() >= i + 1){
+          all_pathes.add_path(parsed_commands[i + 1]);
+        }else{
+          cout<<"Missing argument\n";
+        }
+    }
+    else if(parsed_commands[i] == "show_path"){
+        all_pathes.show_path();
+    }
+  }
   fork_exec(parsed_commands);
 }

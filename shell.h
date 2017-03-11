@@ -7,6 +7,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
+
 struct Path;
 void get_comand(void);
 void start_up(Path & all_pathes);
