@@ -7,6 +7,7 @@ using std::cin;
 using std::endl;
 using std::stringstream;
 using std::find;
+using std::ifstream;
 
 struct Path {
   vector<string> paths;
@@ -44,9 +45,16 @@ struct Path {
 };
 
 void start_up(Path & all_pathes){
-  vector <string> default_pathes {"/usr/local/sbin", "/usr/local/bin","/usr/sbin","/usr/bin","/sbin","/bin","/usr/games","/usr/local/games"};
-  for (size_t i = 0; i < default_pathes.size(); i++) {
-    all_pathes.add_path(default_pathes[i]);
+  ifstream myReadFile;
+  myReadFile.open("all_path");
+  string word;
+  if (myReadFile.is_open()) {
+    while(!myReadFile.eof()){
+      if(word.size() > 0){
+        all_pathes.add_path(word);
+      }
+      myReadFile >> word;
+   }
   }
 }
 
@@ -113,11 +121,11 @@ void fork_exec(vector<string> vector_arg){
 
 void get_comand(void) {
   string input_line;
-  static bool firs_call = true;
-  static Path all_pathes;
-  if(firs_call){
+  static  Path all_pathes;
+  static bool first_run = true;
+  if(first_run){
     start_up(all_pathes);
-    firs_call = false;
+    first_run = false;
   }
   vector<string> parsed_commands;
   cout << "[oh my gosh shell] $ ";
